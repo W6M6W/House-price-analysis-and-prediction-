@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="pageTitle">房价智能评估系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 页头 -->
+    <header class="header">
+        <h1 data-i18n="headerTitle">房产价值评估工具</h1>
+        <p data-i18n="headerSubtitle">基于大数据算法精准估算您的房产价值</p>
+        <!-- 语言切换按钮 -->
+        <button id="langSwitch" class="lang-switch">English</button>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="container">
+        <!-- 评估表单 -->
+        <form class="calculator-form" id="priceForm">
+            <!-- 面积 -->
+            <div class="form-group">
+                <label for="area" data-i18n="areaLabel">房屋面积（平方米）</label>
+                <input type="number" id="area" name="area" min="20" step="1" required>
+            </div>
+            
+
+            <!-- 朝向 -->
+            <div class="form-group">
+                <label for="direction" data-i18n="directionLabel">朝向</label>
+                <select id="direction" name="direction">
+                    <option value="south" data-i18n="southOption">南向</option>
+                    <option value="north" data-i18n="northOption">北向</option>
+                    <option value="east" data-i18n="eastOption">东向</option>
+                    <option value="west" data-i18n="westOption">西向</option>
+                </select>
+            </div>
+
+            <!-- 所在楼层 -->
+            <div class="form-group">
+                <label data-i18n="floorLevelLabel">所在楼层</label>
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="floorLevel" value="high" checked>
+                        <span data-i18n="highFloor">高楼层</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="floorLevel" value="medium">
+                        <span data-i18n="mediumFloor">中楼层</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="floorLevel" value="low">
+                        <span data-i18n="lowFloor">低楼层</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 总楼层 -->
+            <div class="form-group">
+                <label for="totalFloors" data-i18n="totalFloorsLabel">总楼层数</label>
+                <input type="number" id="totalFloors" name="totalFloors" min="1" max="50" required>
+            </div>
+
+            <!-- 建成年代 -->
+            <div class="form-group">
+                <label for="year" data-i18n="yearLabel">建成年代</label>
+                <input type="number" id="year" name="year" min="1950" max="2024" placeholder="请输入4位数年份">
+            </div>
+            
+
+            <!-- 详细地址 -->
+            <div class="form-group">
+                <label for="address" data-i18n="addressLabel">详细地址</label>
+                <input type="text" id="address" name="address" placeholder="例如：衡阳市华新开发区XX路XX小区">
+            </div>
+
+            <!-- 提交按钮 -->
+            <button type="button" id="submitBtn" class="submit-btn" data-i18n="submitBtn">立即评估</button>
+        </form>
+
+        <!-- 修改后的结果容器部分 -->
+        <div class="result-container" id="resultContainer">
+            <div class="result-header">
+                <button class="close-btn" id="closeResults">×</button>
+            </div>
+            <div class="card-container" id="cardWrapper">
+                <!-- 卡片将在这里动态生成 -->
+            </div>
+            <div class="card-nav">
+                <button class="nav-btn prev-btn" id="prevBtn">&lt;</button>
+                <button class="nav-btn next-btn" id="nextBtn">&gt;</button>
+            </div>
+        </div>
+        <div id="resultOverlay" class="result-overlay"></div>
+        <!-- 在body结束前添加等待弹窗结构 -->
+        <div class="loading-modal" id="loadingModal">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p data-i18n="loadingText">评估时间较长，需要一到三分钟左右，请耐心等待</p>
+            </div>
+        </div>
+
+
+    </main>
+
+    <!-- 引入 JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
+

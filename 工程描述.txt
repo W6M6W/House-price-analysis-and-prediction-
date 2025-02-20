@@ -1,0 +1,317 @@
+我想要用python（可增加sql语言） 写一个项目，项目内容为，通过抓取某网站上的房价，挂出日期，房产面积，与地理位置以及其他特征，再对他们进行分类，最后通过机器学习和数据分析，得出这些因素对房价的影响，以及接下的房价走势。
+我要在pycharm中建立8个文件；
+文件1：负责抓取网页上的信息，进行初步分类，按照每套房一行的形式存储进txt格式中（例如编号：1，房产名称：五里牌顺府，面积：99，地址：耒阳，朝向：南北，装修：精装，格局：三室两厅，电梯：有电梯，楼层：中层，年代：2022年，挂出时间：2025-02-04，价格：37.8，每平方米房价：3818），对应txt文本：total_information.txt
+文件2：从百度地图上截取地图，形成房源的分布图，统计不同地段的每平方米房价。//用可视化的方法（每平方米房价从低到高标注为从绿到红）
+文件3：通过机器学习，数据分析等手段，分析随房产面积增加对每平方米房价的影响
+文件4：通过机器学习，数据分析等手段，分析年代对每平方米房价的影响
+文件5：通过机器学习，数据分析等手段，分析挂牌时间对每平方米房价的影响
+文件6：通过机器学习，数据分析等手段，分析装修因素对房价的影响，例如电梯，朝向等
+文件7：通过机器学习，数据分析等手段，计算各因素的权重
+文件8：汇总文件：mainproject //额外工作：接入微信小程序（此阶段忽略）
+接下来，通过我的提问，按要求一步一步完成这个项目
+
+
+我希望按以下框架修改代码：
+在main.py中，按照以下步骤进行数据处理与预测：
+1：数据读入，划分测试集与样本集，调用各因素模块（代码已实现，不重复）
+2：多项式回归模型预测单价，简单加权预测单价。再对二者进行融合，简单的求平均
+3：用决策树进行机器学习
+4：梯度优化与正则化
+5：遗传算法搜索最佳权重
+最后一步：模型集成（集成不同预测方法）
+这是目前要求修改的代码：
+import random
+import math
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import r2_score
+from sklearn.model_selection import KFold
+
+# 调用各因素模块
+from a_to_price import a_p_evolution
+from ad_to_price import ad_to_price_return, get_region_code
+from year_to_price import year_to_price_return
+from le_to_price import le_to_price_return
+from d_to_price import drice_price_return
+
+###########################
+# 增强型统一预测模型
+###########################
+
+class EnhancedUnifiedModel:
+    def __init__(self, training_data):
+        self.training_data = training_data
+        self._initialize_components()
+        self._dynamic_weight_bounds = [(0, 5)] * 3  # 权重约束范围
+
+    def _initialize_components(self):
+        """初始化各分析模块"""
+        self.area_params = a_p_evolution(self.training_data)
+        self.address_adjustments = ad_to_price_return(self.training_data)
+        self.year_params = year_to_price_return(self.training_data)
+        self.floor_adjustments = le_to_price_return(self.training_data)
+        self.orientation_adjustments = drice_price_return(self.training_data)
+
+        # 初始化模型组件
+        self.poly_model = None
+        self.dt_model = None
+        self.ensemble_dt = None
+
+    def extract_features(self, house):
+        """特征提取（保持原有逻辑）"""
+        # [原有特征提取代码...]
+        return features
+
+    def predict_simple_weighted(self, house):
+        """带约束的加权预测"""
+        features = self.extract_features(house)
+        return np.dot(features, [1.0]*5)  # 保持原始权重
+
+    def build_polynomial_model(self, degree=2):
+        """多项式模型构建"""
+        # [原有多项式构建代码...]
+        return self.poly_model
+
+    def predict_polynomial(self, house):
+        """多项式预测"""
+        return self.poly_model.predict(...)
+
+    def build_decision_tree(self, max_depth=5):
+        """决策树模型构建"""
+        # [原有决策树构建代码...]
+        return self.dt_model
+
+    def predict_decision_tree(self, house):
+        """决策树预测"""
+        return self.dt_model.predict(...)
+
+    def predict_fusion(self, house):
+        """
+        核心融合预测方法
+        策略：加权预测和多项式预测各贡献45%，决策树贡献10%
+        """
+        simple = self.predict_simple_weighted(house) * 0.45
+        poly = self.predict_polynomial(house) * 0.45
+        dt = self.predict_decision_tree(house) * 0.10
+        return simple + poly + dt
+
+###########################
+# 动态约束优化器
+###########################
+
+class DynamicConstraintOptimizer:
+    def __init__(self, model):
+        self.model = model
+        self.weights = np.array([0.45, 0.45, 0.10])  # 初始融合权重
+
+    def optimize(self, train_data, epochs=100, lr=0.01):
+        """带约束的权重优化"""
+        for epoch in range(epochs):
+            grad = np.zeros(3)
+            for house in train_data:
+                # 计算各模型预测值
+                preds = [
+                    self.model.predict_simple_weighted(house),
+                    self.model.predict_polynomial(house),
+                    self.model.predict_decision_tree(house)
+                ]
+                # 计算梯度
+                error = np.dot(self.weights, preds) - float(house[-1])
+                grad += 2 * error * np.array(preds)
+
+            # 应用梯度更新
+            self.weights -= lr * grad / len(train_data)
+
+            # 施加动态约束
+            self.weights = np.clip(self.weights, 0, 1)
+            self.weights /= np.sum(self.weights)  # 权重归一化
+
+            print(f"Epoch {epoch}: Weights={self.weights}")
+
+        return self.weights
+
+###########################
+# 遗传算法优化器（增强版）
+###########################
+
+class GeneticOptimizer:
+    def __init__(self, model):
+        self.model = model
+        self.population_size = 20
+        self.generations = 50
+
+    def _evaluate(self, candidate):
+        """评估候选解"""
+        weights = candidate[:3]
+        params = candidate[3:]
+        # 设置模型参数
+        self.model.build_polynomial_model(degree=int(params[0]))
+        self.model.build_decision_tree(max_depth=int(params[1]))
+        # 计算误差
+        errors = []
+        for house in self.model.training_data:
+            pred = np.dot(weights, [
+                self.model.predict_simple_weighted(house),
+                self.model.predict_polynomial(house),
+                self.model.predict_decision_tree(house)
+            ])
+            errors.append((pred - float(house[-1]))**2)
+        return np.mean(errors)
+
+    def optimize(self):
+        """并行遗传算法优化"""
+        # [优化后的遗传算法实现...]
+        return best_solution
+
+###########################
+# 集成预测系统
+###########################
+
+class EnsembleSystem:
+    def __init__(self, models):
+        self.models = models
+        self.meta_model = LinearRegression()
+
+    def train_meta_model(self, train_data):
+        """训练堆叠元模型"""
+        X, y = [], []
+        for house in train_data:
+            # 收集各模型预测结果
+            preds = [model.predict_fusion(house) for model in self.models]
+            X.append(preds)
+            y.append(float(house[-1]))
+        self.meta_model.fit(X, y)
+
+    def predict(self, house):
+        """集成预测"""
+        base_preds = [model.predict_fusion(house) for model in self.models]
+        return self.meta_model.predict([base_preds])[0]
+
+###########################
+# 主程序流程
+###########################
+
+if __name__ == '__main__':
+    # 数据加载与预处理
+    property_data = load_data_into_list('cleaned_information.txt')
+    train_set, test_set = split_data(property_data)
+
+    # 初始化基础模型
+    base_model = EnhancedUnifiedModel(train_set)
+    base_model.build_polynomial_model(degree=2)
+    base_model.build_decision_tree(max_depth=5)
+
+    # 第一阶段：动态权重优化
+    optimizer = DynamicConstraintOptimizer(base_model)
+    optimized_weights = optimizer.optimize(train_set)
+
+    # 第二阶段：遗传算法参数优化
+    genetic_engine = GeneticOptimizer(base_model)
+    best_params = genetic_engine.optimize()
+
+    # 第三阶段：构建集成系统
+    ensemble = EnsembleSystem([base_model])
+    ensemble.train_meta_model(train_set)
+
+    # 最终预测
+    sample = test_set[0]
+    print("最终预测价格:", ensemble.predict(sample))
+    print("实际价格:", sample[-1])
+
+
+
+
+
+    ({
+            "estimate": estimated_price,
+            "factors": {
+                "orientation": return_data_nodeal[0],  # 朝向系数（%）
+                "floorImpact": return_data_nodeal[1],  # 楼层影响（元）
+                "floorHeight": return_data_nodeal[2],  # 层高影响（元）
+                "regionAvg": return_data_nodeal[3],  # 区域均价（元）
+                "cityAvg": return_data_nodeal[4]  # 全市均价（元）
+            }
+        })
+
+
+
+
+
+
+
+
+
+
+        function updateResult(data) {
+    const factors = [
+        {
+            title: "estimate",
+            value: data.estimate,
+            unit: "%",
+            image: "卡片底图.gif"
+        },
+        {
+            title: "orientation",
+            value: data.factors.orientation,
+            unit: "%",
+            image: "卡片底图1,png"
+        },
+        {
+            title: "floorImpact",
+            value: data.factors.floorImpact,
+            unit: "%",
+            image: "卡片底图2.png"
+        },
+        {
+            title: "floorHeight",
+            value: data.factors.floorHeight,
+            unit: "%",
+            image: "卡片底图3.png"
+        },
+        {
+            title: "regionAvg",
+            value: data.factors.regionAvg,
+            unit: "元",
+            image: "卡片底图4.png"
+        },
+        {
+            title: "cityAvg",
+            value: data.factors.cityAvg,
+            unit: "元",
+            image: "卡片底图5.png"
+        }
+    ];
+
+    // 为每个因素生成独立的卡片（增加了内部结构便于美化）
+    factors.forEach(factor => {
+        const card = document.createElement('div');
+        card.className = 'data-card';
+        card.innerHTML = `
+            <img src="${factor.image}" class="card-image">
+            <div class="card-body">
+                <h3>${translations[currentLang][factor.title]}</h3>
+                <div class="card-value">${factor.value}${factor.unit}</div>
+            </div>
+        `;
+        cardWrapper.appendChild(card);
+    });
+
+
+
+          orientation: "朝向系数",
+        floorImpact: "楼层影响",
+        floorHeight: "层高影响",
+        regionAvg: "区域均价",
+        buildingAge: "建筑年龄",
+        cityAvg: "全市均价"
+
+
+                orientation: "Orientation",
+        floorImpact: "Floor Impact",
+        floorHeight: "Floor Height",
+        regionAvg: "Regional Avg",
+        buildingAge: "Building Age",
+        cityAvg: "City Avg"
+    }

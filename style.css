@@ -1,0 +1,547 @@
+/* style.css */
+:root {
+    --primary-color: #11293dcb;     /* 主色调 - 深蓝灰 */
+    --word-color: white;
+    --secondary-color: #8d1a0d;   /* 强调色 - 红色 */
+    --background-color: rgba(249, 249, 249, 0.507); /* 增加透明度 */
+    --neon-color: #f4f5f596; /* 流光颜色 */
+}
+
+body {
+    font-family: 'Segoe UI', '微软雅黑', sans-serif;
+    line-height: 1.6;
+    background: url('背景页面.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    min-height: 100vh;
+}
+
+/* 新增背景遮罩层 */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: -1;
+}
+
+/* 页头样式 */
+.header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem ;
+    position: relative;
+}
+
+.header h1 {
+    font-size: 2.2rem;
+    margin: 0 0 0.5rem;
+    transition: font-size 0.3s;
+}
+
+.header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    transition: font-size 0.3s;
+}
+
+/* 主容器 */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+/* 表单和结果区域 */
+.calculator-form {
+    /*background-image: url('金属拉丝.png'); /* 设置背景图 */
+    /*background-size: cover; /* 使图像覆盖整个容器 */
+    /*background-position: center; /* 图像居中 */
+    /*background-repeat: no-repeat; /* 不重复背景图 */
+    /*width: 100%; /* 宽度100% */
+    /*height: 100vh; /* 高度100视口 */
+    background: rgba(193, 241, 255, 0.3); /* 主内容区白色半透明 */
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 5px var(--neon-color); /* 初始阴影 */
+    animation: neonGlow 1.5s linear infinite; /* 应用动画 */
+}
+
+/* 定义流光动画 */
+@keyframes neonGlow {
+    0%, 100% {
+        box-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color), 0 0 30px var(--neon-color);
+    }
+    50% {
+        box-shadow: 0 0 2px var(--neon-color), 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 15px var(--neon-color);
+    }
+}
+
+/* 表单元素 */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold; /* 设置为粗体 */
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+
+input[type="number"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.7); /* 调低边框的透明度 */
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.5); /* 调低背景的透明度 */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input:hover,
+select:hover {
+    border-color: rgba(255, 255, 255, 0.7); /* 调低边框颜色的透明度 */
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+}
+
+/* 单选按钮组 */
+.radio-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.radio-group span {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.radio-group input:checked + span {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* 提交按钮 */
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--secondary-color);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submit-btn:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+}
+
+/* 结果展示 */
+.result-box,
+.factors-box {
+    margin-top: 2rem;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.result-box:hover,
+.factors-box:hover {
+    transform: translateY(-3px);
+}
+
+.result-box h3 {
+    color: var(--primary-color);
+    margin: 0 0 1rem;
+}
+
+.result-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    text-align: center;
+}
+
+/* 影响因素内容 */
+.factors-content {
+    line-height: 1.8;
+    color: #4a5568;
+    white-space: pre-wrap;
+}
+
+/* 语言切换按钮 */
+.lang-switch {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.253);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lang-switch:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .header {
+        padding: 1.5rem 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .container {
+        padding: 0 15px;
+        max-width: 95%;
+    }
+
+    .calculator-form,
+    .result-box,
+    .factors-box {
+        padding: 1.5rem;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .result-value {
+        font-size: 2rem;
+    }
+
+    .lang-switch {
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        background-attachment: scroll;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+        padding: 0 2rem;
+    }
+
+    .header p {
+        font-size: 1rem;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+        padding: 0.6rem;
+    }
+
+    .submit-btn {
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+
+    .result-value {
+        font-size: 1.8rem;
+    }
+
+    .factors-content {
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .calculator-form {
+        padding: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+}
+
+/* 加载动画 */
+.loading-dots {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 1em;
+}
+
+.loading-dots::after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    animation: dotPulse 1.4s infinite linear;
+}
+
+@keyframes dotPulse {
+    0% { content: "·"; }
+    33% { content: "··"; }
+    66% { content: "···"; }
+    100% { content: "·"; }
+}
+
+/* 添加弹窗样式 */
+.loading-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.loading-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1.5rem;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-content p {
+    color: var(--primary-color);
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.5;
+}
+/* 在原有style.css末尾添加 */
+/* 卡片式布局 */
+/* 背景遮罩 */
+#resultOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 背景遮罩半透明 */
+    display: none; /* 默认隐藏 */
+    z-index: 9999; /* 确保在最上层 */
+}
+
+/* 结果卡片容器 */
+#resultContainer {
+    position: fixed;
+    top: 50%;
+    left: 90%;
+    transform: translate(-55%, -55%);
+    background-color: transparent;
+    width: 100%;
+    padding: 10px;
+    z-index: 10000;
+    display: none;
+}
+
+.card-container {
+    display: flex;
+    width: 120%;
+    scroll-snap-type: x mandatory;
+    justify-content: center;
+}
+
+.data-card {
+    width: 300px;
+    height: 375px;
+    margin: 10px;
+    background-image: url('金属拉丝.png'); /* 设置背景图片 */
+    background-size: cover; /* 背景图片覆盖整个卡片 */
+    background-position: center; /* 背景图片居中 */
+    border-radius: 20px; /* 圆角 */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* 阴影 */
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 20px;
+    padding: 20px;
+    transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+    position: relative;
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 选中状态卡片 */
+.data-card.active {
+    transform: scale(1.1) translateY(-10px);
+    z-index: 2;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* 非激活卡片样式 */
+.data-card:not(.active) {
+    opacity: 0.9;
+    transform: scale(0.9);
+}
+
+/* 图片样式 */
+.card-image {
+    width: 300px; /* 调整图片宽度 */
+    height: 300px; /* 调整图片高度 */
+    object-fit: cover;
+    margin: auto;
+    margin-top: 10px; /* 调整与顶部的距离 */
+    margin-bottom: 20px; /* 调整与底部的距离 */
+}
+
+/* 标题样式 */
+.card-title {
+    line-height: 0.8;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    width: 100%;
+    padding: 0 10px; /* 增加内边距，使标题与边缘间距更合适 */
+}
+
+/* 值样式 */
+.card-value {
+    line-height: 0.8;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ff5e00;
+    width: 100%;
+    padding: 0 10px; /* 增加内边距，使值与边缘间距更合适 */
+    margin-top: 10px;
+}
+
+/* 导航按钮 */
+.card-nav {
+    width:20%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.nav-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 关闭按钮 */
+.close-btn {
+    position: absolute;
+    top: 0%; /* 距离顶部 10px */
+    left: 40%; /* 距离左侧 10px */
+    background: white;
+    border: white;
+    font-size: 32px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 10001; /* 确保在顶层 */
+  }
+  
+  .close-btn:hover {
+    color: #ff0000;
+  }
+
+
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+    .data-card {
+        width: 200px;
+        height: 150px;
+    }
+    .card-image {
+        width: 150px;
+        height: 150px;
+    }
+    .card-title {
+        font-size: 16px;
+    }
+    .card-value {
+        font-size: 14px;
+    }
+}
+
