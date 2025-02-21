@@ -18,9 +18,9 @@ def fetch_property_info(max_pages=10):
         # 第一页为：https://hy.58.com/ershoufang/i11220yy4/
         # 后续页面为：https://hy.58.com/ershoufang/i11220p{page}yy4/
         if page == 1:
-            url = "https://hy.58.com/ershoufang/i11220ra4yy4/"
+            url = "……"
         else:
-            url = f"https://hy.58.com/ershoufang/i11220p{page}ra4yy4/"
+            url = f"……p{page}……"
 
         print(f"正在抓取第 {page} 页: {url}")
 
