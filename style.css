@@ -80,7 +80,7 @@ body::after {
 /* 定义流光动画 */
 @keyframes neonGlow {
     0%, 100% {
-        box-shadow: 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 20px var(--neon-color), 0 0 30px var(--neon-color);
+        box-shadow: 0 0 15px var(--neon-color), 0 0 20px var(--neon-color), 0 0 30px var(--neon-color), 0 0 40px var(--neon-color);
     }
     50% {
         box-shadow: 0 0 2px var(--neon-color), 0 0 5px var(--neon-color), 0 0 10px var(--neon-color), 0 0 15px var(--neon-color);
